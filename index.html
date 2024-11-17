@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aplicativo de Clima</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <h1>Como está o clima?</h1>
+    <form id="weather-form">
+      <input type="text" id="city" placeholder="digite o nome da cidade" required />
+      <button type="submit">buscar clima</button>
+    </form>
+
+    <button id="get-location">usar minha localização</button>
+
+    <div id="weather-result">
+      <!-- Resultados aparecerão aqui -->
+    </div>
+
+    <canvas id="temperatureChart" width="400" height="200"></canvas>
+  </div>
+
+  <button id="toggle-theme">alternar tema</button>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
+
