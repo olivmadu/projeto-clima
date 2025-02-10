@@ -16,13 +16,13 @@ O projeto exibe informações sobre o clima de uma região específica, permitin
 ## Demonstração
 
 **Página inicial**
-/1.png
+1.png
 
 **Após a busca**
 
-/2.png
-/3.png
+2.png
+3.png
 
 **Tema no modo escuro** 
 
-/4.png
+4.png
