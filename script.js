@@ -9,6 +9,8 @@ const API_KEY = "ea879c38b67b905b4a2fe1f8ff710d22";
 const API_URL = "https://api.openweathermap.org/data/2.5/weather";
 const FORECAST_URL = "https://api.openweathermap.org/data/2.5/forecast";
 
+let chartInstance = null; // Variável para armazenar a instância do gráfico
+
 // Alternar o tema
 toggleThemeButton.addEventListener("click", () => {
   document.body.classList.toggle("dark-mode");
@@ -17,7 +19,7 @@ toggleThemeButton.addEventListener("click", () => {
 // Buscar o clima por cidade
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
-  const city = cityInput.value;
+  const city = cityInput.value.trim();
   if (!city) return;
   await getWeatherByCity(city);
 });
@@ -37,29 +39,35 @@ getLocationButton.addEventListener("click", async () => {
 // Função para buscar o clima por cidade
 async function getWeatherByCity(city) {
   try {
+    resultDiv.innerHTML = "<p>Carregando...</p>"; // Exibir mensagem de carregamento
     const response = await fetch(`${API_URL}?q=${city}&units=metric&lang=pt_br&appid=${API_KEY}`);
     if (!response.ok) throw new Error("Cidade não encontrada");
     const data = await response.json();
     renderWeatherData(data);
     await getForecast(city);
   } catch (error) {
+    console.error("Erro ao buscar clima:", error.message);
     resultDiv.innerHTML = `<p style="color: red;">${error.message}</p>`;
+    resultDiv.classList.add("show"); // Garantir que o erro apareça visível
   }
 }
 
 // Função para buscar o clima por coordenada
 async function getWeatherByCoordinates(lat, lon) {
   try {
+    resultDiv.innerHTML = "<p>Carregando...</p>";
     const response = await fetch(`${API_URL}?lat=${lat}&lon=${lon}&units=metric&lang=pt_br&appid=${API_KEY}`);
     if (!response.ok) throw new Error("Clima não encontrado");
     const data = await response.json();
     renderWeatherData(data);
   } catch (error) {
+    console.error("Erro ao buscar clima:", error.message);
     resultDiv.innerHTML = `<p style="color: red;">${error.message}</p>`;
+    resultDiv.classList.add("show");
   }
 }
 
-// Renderizar dados
+// Renderizar dados do clima
 function renderWeatherData(data) {
   const { name, main, weather, wind, sys } = data;
   const temperature = main.temp;
@@ -71,15 +79,20 @@ function renderWeatherData(data) {
   const sunset = new Date(sys.sunset * 1000).toLocaleTimeString("pt-BR");
 
   resultDiv.innerHTML = `
-    <h2>${name}</h2>
-    <p>Temperatura: ${temperature}°C</p>
-    <p>${description.charAt(0).toUpperCase() + description.slice(1)}</p>
-    <p>Umidade: ${humidity}%</p>
-    <p>Vento: ${windSpeed} km/h</p>
-    <p>Nascer do sol: ${sunrise}</p>
-    <p>Pôr do sol: ${sunset}</p>
-    <img src="http://openweathermap.org/img/wn/${icon}@2x.png" alt="${description}">
+    <div class="weather-card" style="text-align: center; margin-top: 20px;">
+      <h2>${name}</h2>
+      <img src="http://openweathermap.org/img/wn/${icon}@2x.png" alt="${description}" style="display: block; margin: auto;">
+      <p><strong>Temperatura:</strong> ${temperature}°C</p>
+      <p><strong>Descrição:</strong> ${description.charAt(0).toUpperCase() + description.slice(1)}</p>
+      <p><strong>Umidade:</strong> ${humidity}%</p>
+      <p><strong>Vento:</strong> ${windSpeed} km/h</p>
+      <p><strong>Nascer do sol:</strong> ${sunrise}</p>
+      <p><strong>Pôr do sol:</strong> ${sunset}</p>
+    </div>
   `;
+
+  resultDiv.classList.add("show"); // Garantir que os dados apareçam
+  chartCanvas.style.display = "block";
 }
 
 // Obter previsão
@@ -104,7 +117,11 @@ function renderForecastChart(data) {
     temperatures.push(item.main.temp);
   });
 
-  new Chart(chartCanvas, {
+  if (chartInstance) {
+    chartInstance.destroy(); // Remover gráfico antigo antes de criar um novo
+  }
+
+  chartInstance = new Chart(chartCanvas, {
     type: "line",
     data: {
       labels,
@@ -117,4 +134,3 @@ function renderForecastChart(data) {
     }
   });
 }
-

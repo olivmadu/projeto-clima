@@ -3,28 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aplicativo de Clima</title>
+  <title>Aplicativo de clima</title>
   <link rel="stylesheet" href="styles.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="app-container">
     <h1>Como está o clima?</h1>
+    
     <form id="weather-form">
-      <input type="text" id="city" placeholder="digite o nome da cidade" required />
-      <button type="submit">buscar clima</button>
+      <label for="city" class="visually-hidden">Digite o nome da cidade</label>
+      <input type="text" id="city" placeholder="Digite o nome da cidade" required />
+      <button type="submit" aria-label="Buscar clima">
+        🔍 Buscar clima
+      </button>
     </form>
 
-    <button id="get-location">usar minha localização</button>
+    <button id="get-location" aria-label="Usar minha localização">📍 Usar minha localização</button>
 
     <div id="weather-result">
-      <!-- Resultados aparecerão aqui -->
+      <!-- Resultados -->
     </div>
 
-    <canvas id="temperatureChart" width="400" height="200"></canvas>
+    <canvas id="temperatureChart" width="400" height="200" style="display: none;"></canvas>
   </div>
 
-  <button id="toggle-theme">alternar tema</button>
+  <button id="toggle-theme" aria-label="Alternar tema">🌙 Alternar tema</button>
 
   <script src="script.js"></script>
 </body>
